@@ -818,7 +818,7 @@ automatically."
   "Run Rails console in DIR using Zeus."
   (interactive (list (inf-ruby-console-read-directory 'zeus)))
   (let ((default-directory (file-name-as-directory dir))
-        (exec-prefix (if (executable-find "zeus") "" "bundle exec ")))
+        (exec-prefix (if (executable-find "zeus") "" "bundler exec ")))
     (inf-ruby-console-run (concat exec-prefix "zeus console") "zeus")))
 
 ;;;###autoload
@@ -829,7 +829,7 @@ automatically."
          (env (inf-ruby-console-rails-env))
          (with-bundler (file-exists-p "Gemfile")))
     (inf-ruby-console-run
-     (concat (when with-bundler "bundle exec ")
+     (concat (when with-bundler "bundler exec ")
              "rails console -e "
              env)
      "rails")))
@@ -862,7 +862,7 @@ automatically."
          (process-environment (cons (format "HANAMI_ENV=%s" env)
                                     process-environment)))
     (inf-ruby-console-run
-     (concat (when with-bundler "bundle exec ")
+     (concat (when with-bundler "bundler exec ")
              "hanami console")
      "hanami")))
 
@@ -886,8 +886,8 @@ Gemfile, it should use the `gemspec' instruction."
          (base-command
           (if (file-exists-p "Gemfile")
               (if (inf-ruby-file-contents-match gemspec "\\$LOAD_PATH")
-                  "bundle exec irb"
-                "bundle exec irb -I lib")
+                  "bundler exec irb"
+                "bundler exec irb -I lib")
             "irb -I lib"))
          (name (inf-ruby-file-contents-match
                 gemspec "\\.name[ \t]*=[ \t]*['\"]\\([^'\"]+\\)['\"]" 1))
@@ -923,7 +923,7 @@ Gemfile, it should use the `gemspec' instruction."
   "Run racksh in DIR."
   (interactive (list (inf-ruby-console-read-directory 'racksh)))
   (let ((default-directory (file-name-as-directory dir)))
-    (inf-ruby-console-run "bundle exec racksh" "racksh")))
+    (inf-ruby-console-run "bundler exec racksh" "racksh")))
 
 (defun inf-ruby-in-ruby-compilation-modes (mode)
   "Check if MODE is a Ruby compilation mode."
@@ -974,24 +974,24 @@ Gemfile, it should use the `gemspec' instruction."
   (let ((default-directory (file-name-as-directory dir)))
     (cond
      ((file-exists-p "bin/console")
-      (inf-ruby-console-run "bundle exec bin/console" "bin/console"))
+      (inf-ruby-console-run "bundler exec bin/console" "bin/console"))
      ((file-exists-p "console.rb")
-      (inf-ruby-console-run "bundle exec ruby console.rb" "console.rb"))
+      (inf-ruby-console-run "bundler exec ruby console.rb" "console.rb"))
      ((file-exists-p "console")
-      (inf-ruby-console-run "bundle exec console" "console.rb")))))
+      (inf-ruby-console-run "bundler exec console" "console.rb")))))
 
 ;;;###autoload
 (defun inf-ruby-console-default (dir)
-  "Run Pry, or bundle console, in DIR."
+  "Run Pry, or bundler console, in DIR."
   (interactive (list (inf-ruby-console-read-directory 'default)))
   (let ((default-directory (file-name-as-directory dir)))
     (unless (file-exists-p "Gemfile")
       (error "The directory must contain a Gemfile"))
     (cond
      ((inf-ruby-file-contents-match "Gemfile" "[\"']pry[\"']")
-      (inf-ruby-console-run "bundle exec pry" "pry"))
+      (inf-ruby-console-run "bundler exec pry" "pry"))
      (t
-      (inf-ruby-console-run "bundle console" "bundle console")))))
+      (inf-ruby-console-run "bundler console" "bundler console")))))
 
 ;;;###autoload
 (defun inf-ruby-file-contents-match (file regexp &optional match-group)
